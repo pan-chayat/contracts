@@ -8,12 +8,14 @@ contract PanchNFTFact is ReentrancyGuard{
   struct EventItem {
     string collectionName;
     string collectionSymbol;
+    address collectionAddress;
     address payable [] tokenURIs;
     address payable [] whitelisted; 
   }
   event EventItemCreated (
     string collectionName,
     string collectionSymbol,
+    address collectionAddress,
     address payable [] tokenURIs,
     address payable [] whitelisted
   );
@@ -39,6 +41,7 @@ contract PanchNFTFact is ReentrancyGuard{
     idToEvent[contractId] =  EventItem(
         collectionName,
         collectionSymbol,
+        address(newCollectionAddress),
         tokenURIs,
         whitelisted
     );
