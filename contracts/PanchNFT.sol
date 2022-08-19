@@ -11,8 +11,12 @@ contract PanchNFT is ERC721, ERC721URIStorage, Ownable {
 
     Counters.Counter private _tokenIdCounter;
 
-    constructor() ERC721("MyToken", "MTK") {
-        
+    constructor(string memory Name, 
+    string memory Symbol,
+    string [] memory _tokenURIs,
+    address payable [] memory _whitelisted
+    ) 
+    ERC721(Name, Symbol) {
     }
 
     function safeMint(address to, string memory uri) public onlyOwner {

@@ -9,14 +9,14 @@ contract PanchNFTFact is ReentrancyGuard{
     string collectionName;
     string collectionSymbol;
     address collectionAddress;
-    address payable [] tokenURIs;
+    string[] tokenURIs;
     address payable [] whitelisted; 
   }
   event EventItemCreated (
     string collectionName,
     string collectionSymbol,
     address collectionAddress,
-    address payable [] tokenURIs,
+    string [] tokenURIs,
     address payable [] whitelisted
   );
   mapping(uint256 => EventItem) private idToEvent;
@@ -24,14 +24,14 @@ contract PanchNFTFact is ReentrancyGuard{
   function createNewPanch(
     string memory collectionName,
     string memory collectionSymbol,
-    address payable [] calldata tokenURIs,
-    address payable [] calldata whitelisted
+    string [] memory _tokenURIs,
+    address payable [] calldata _whitelisted
     ) public{
       PanchNFT newCollectionAddress = new PanchNFT(
         collectionName,
         collectionSymbol,
-        tokenURIs,
-        whitelisted
+        _tokenURIs,
+        _whitelisted
         );
       emit PanchFactoryCreated(address(newCollectionAddress));
 
@@ -42,8 +42,8 @@ contract PanchNFTFact is ReentrancyGuard{
         collectionName,
         collectionSymbol,
         address(newCollectionAddress),
-        tokenURIs,
-        whitelisted
+        _tokenURIs,
+        _whitelisted
     );
   }
 }
