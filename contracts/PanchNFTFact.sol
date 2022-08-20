@@ -4,8 +4,9 @@ import "./PanchNFT.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 contract PanchNFTFact is ReentrancyGuard{
   uint _contractIdCounter;
-  event PanchFactoryCreated(address collectionAddress);
+  event PanchFactoryCreated(address creator, address collectionAddress);
   struct EventItem {
+    address creator;
     string collectionName;
     string collectionSymbol;
     address collectionAddress;
@@ -33,12 +34,13 @@ contract PanchNFTFact is ReentrancyGuard{
         _tokenURIs,
         _whitelisted
         );
-      emit PanchFactoryCreated(address(newCollectionAddress));
+      emit PanchFactoryCreated(msg.sender, address(newCollectionAddress));
 
     _contractIdCounter++;
     uint256 contractId = _contractIdCounter;
   
     idToEvent[contractId] =  EventItem(
+        msg.sender,
         collectionName,
         collectionSymbol,
         address(newCollectionAddress),
