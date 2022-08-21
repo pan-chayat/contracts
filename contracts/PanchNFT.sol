@@ -10,6 +10,8 @@ contract PanchNFT is ERC721, ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
+    string [] tokenURIs;
+    address [] whitelisted;
 
     constructor(string memory Name, 
     string memory Symbol,
@@ -17,13 +19,36 @@ contract PanchNFT is ERC721, ERC721URIStorage, Ownable {
     address payable [] memory _whitelisted
     ) 
     ERC721(Name, Symbol) {
+        tokenURIs = _tokenURIs;
+        whitelisted = _whitelisted;
     }
 
-    function safeMint(address to, string memory uri) public onlyOwner {
+    function isEligible(address _address) public view returns(bool) {
+        bool eligible = false;
+        for(uint i; i<whitelisted.length; i++)
+        {
+            if(_address == whitelisted[i])
+            {
+                eligible = true;
+            }
+        }
+        return eligible;
+    }
+
+    function getURIs() public view returns(string[] memory){
+        return tokenURIs;
+    }
+
+    modifier onlyWhitelisted() {
+        require(isEligible(msg.sender),"You are not whitelisted");
+        _;
+    }
+
+    function safeMint(uint uriIndex) public onlyWhitelisted {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
-        _safeMint(to, tokenId);
-        _setTokenURI(tokenId, uri);
+        _safeMint(msg.sender, tokenId);
+        _setTokenURI(tokenId, tokenURIs[uriIndex]);
     }
 
     // The following functions are overrides required by Solidity.
