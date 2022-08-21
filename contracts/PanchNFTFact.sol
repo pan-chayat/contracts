@@ -21,7 +21,7 @@ contract PanchNFTFact is ReentrancyGuard{
     address payable [] whitelisted
   );
   mapping(uint256 => EventItem) private idToEvent;
-  
+  mapping(address => uint) public addressToEventId;
   function createNewPanch(
     string memory collectionName,
     string memory collectionSymbol,
@@ -35,10 +35,11 @@ contract PanchNFTFact is ReentrancyGuard{
         _whitelisted
         );
       emit PanchFactoryCreated(msg.sender, address(newCollectionAddress));
-
-    _contractIdCounter++;
+    
     uint256 contractId = _contractIdCounter;
-  
+    addressToEventId[msg.sender] = contractId; 
+    _contractIdCounter++;
+
     idToEvent[contractId] =  EventItem(
         msg.sender,
         collectionName,
@@ -47,5 +48,9 @@ contract PanchNFTFact is ReentrancyGuard{
         _tokenURIs,
         _whitelisted
     );
+  }
+
+  function getDeployedCollection(address _address) public view returns(address){
+    return idToEvent[addressToEventId[_address]].collectionAddress;
   }
 }
